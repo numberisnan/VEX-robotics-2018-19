@@ -1,6 +1,6 @@
 # WHO LIKES JAVASCRIPT?
 
-Moses likes Javascript.
+Faraz likes Javascript even though it sucks.
 
 
 
