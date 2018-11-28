@@ -1,6 +1,6 @@
-# WHO LIKES JAVASCRIPT?
+# Vex Robotics 2018-19 
 
-Faraz likes Javascript even though it sucks.
+Copy plz
 
 
 
