@@ -6,21 +6,37 @@
 
 #define SET_MOTOR(vfl, vfr, vbl, vbr) \
 motor[motorfl] = ((vfl) / REDUCE); \
-motor[motorfr] = (-(vfr) / REDUCE); \
-motor[motorbl] = ((vbl) / REDUCE); \
-motor[motorbr] = (-(vbr) / REDUCE);
+motor[motorfr] = ((vfr) / REDUCE); \
+motor[motorbl] = (-(vbl) / REDUCE); \
+motor[motorbr] = (-(vbr) / REDUCE)
 
 
 const int REDUCE = 1;
 const bool LEFT = true; // Enables left-handed ness
 
-int vdelta, hdelta;
+int up, down, left, right;
 
 task main(){
 	for(;;){
-		vdelta = LEFT ? vexRT[Ch3] : vexRT[Ch2];
-		hdelta = LEFT ? vexRT[Ch4] : vexRT[Ch1];
+		up = LEFT ? vexRT[Btn7U] : vexRT[Btn8U];
+		down = LEFT ? vexRT[Btn7D] : vexRT[Btn8D];
+		left = LEFT ? vexRT[Btn7L] : vexRT[Btn8L];
+		right = LEFT ? vexRT[Btn7R] : vexRT[Btn8R];
 
-		SET_MOTOR(vdelta + hdelta, vdelta - hdelta, vdelta + hdelta, vdelta - hdelta);
+		if(up){
+			SET_MOTOR(127, 127, 127, 127);
+		}
+		else if(down){
+			SET_MOTOR(-127, -127, -127, -127);
+		}
+		else if(left){
+			SET_MOTOR(-127, 127, -127, 127);
+		}
+		else if(right){
+			SET_MOTOR(127, -127, 127, -127);
+		}
+		else{
+			SET_MOTOR(0, 0, 0, 0);
+		}
 	}
 }
