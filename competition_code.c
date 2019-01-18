@@ -80,7 +80,7 @@ void rightflippable(){
 #define ifright rightflippable()
 
 // Triggered by button 5U
-void _autonomous(){
+void _autonomous_noflag(){
 	if(taskflipflags){
 		// no u
 	}
@@ -90,13 +90,28 @@ void _autonomous(){
 		ifright;
 		wms(550);
 		forward;
-		wms(7000);
+		wms(4000);
+	}
+}
+
+void _autonomous_flag() {
+	if(taskflipflags){
+		// E
+	} else {
+		backward;
+		wms(1500);
+		setmotor(-M/2, -M/2, -M/2, -M/2); //Back up slowly
+		sec;
+		forward;
+		sec;
+
+
 	}
 }
 
 task autonomous()
 {
-	_autonomous();
+	_autonomous_noflag();
 }
 
 // I love you
@@ -104,6 +119,8 @@ task autonomous()
 // We are a great big family
 // Please marry me right now im so lonely
 // I love you and you love me
+//
+// No
 task usercontrol()
 {
 	// User control code here, inside the loop
@@ -154,7 +171,7 @@ task usercontrol()
 
 		// Autonomous Test ( DO NOT USE IN COMPETITION )
 		if(vexRT[Btn5U]){
-			_autonomous();
+			_autonomous_flag();
 		}
 
 		// Autonomous Test - Changes whether the autonomous run is flipped or not
