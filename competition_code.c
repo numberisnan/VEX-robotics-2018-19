@@ -64,15 +64,15 @@ void setarmspin(int coeff){
 #define sec wms(1000)
 
 //Checks whether ill get a girlfriend or not
-bool flipped = false, taskflipflags = false;
+bool flipdirection = false, taskflipflags = false;
 
 void leftflippable(){
-	if(flipped) right;
+	if(flipdirection) right;
 	else left;
 }
 
 void rightflippable(){
-	if(flipped) left;
+	if(flipdirection) left;
 	else right;
 }
 
@@ -80,9 +80,14 @@ void rightflippable(){
 #define ifright rightflippable()
 
 // Triggered by button 5U
-void _autonomous_noflag(){
+void _autonomous(){
 	if(taskflipflags){
-		// no u
+		backward;
+		wms(1500);
+		setmotor(-M/2, -M/2, -M/2, -M/2); //Back up slowly
+		sec;
+		forward;
+		sec;
 	}
 	else{
 		forward;
@@ -94,24 +99,9 @@ void _autonomous_noflag(){
 	}
 }
 
-void _autonomous_flag() {
-	if(taskflipflags){
-		// E
-	} else {
-		backward;
-		wms(1500);
-		setmotor(-M/2, -M/2, -M/2, -M/2); //Back up slowly
-		sec;
-		forward;
-		sec;
-
-
-	}
-}
-
 task autonomous()
 {
-	_autonomous_noflag();
+	_autonomous();
 }
 
 // I love you
@@ -171,16 +161,16 @@ task usercontrol()
 
 		// Autonomous Test ( DO NOT USE IN COMPETITION )
 		if(vexRT[Btn5U]){
-			_autonomous_flag();
+			_autonomous();
 		}
 
-		// Autonomous Test - Changes whether the autonomous run is flipped or not
+		// Autonomous Test - Changes whether the autonomous run is flipdirection or not
 
 		if(vexRT[Btn5D]){
-			flipped = false;
+			flipdirection = false;
 		}
 		else if(vexRT[Btn6D]){
-			flipped = true;
+			flipdirection = true;
 		}
 	}
 }
