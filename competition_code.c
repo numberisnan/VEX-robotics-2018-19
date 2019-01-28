@@ -1,3 +1,4 @@
+#pragma config(Sensor, dgtl1,  shaft1,         sensorQuadEncoder)
 #pragma config(Motor,  port2,           mot2,          tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port3,           mot3,          tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port4,           mot4,          tmotorVex393_MC29, openLoop)
@@ -31,27 +32,32 @@ void pre_auton()
 const int M = 127, // Max value
 H = 63, Q = 32;
 
+//I do bfs every day
+void mot(int motor_num, int coeff){
+	motor[motor_num] = (vexRT[Btn6U] ? H : M) * coeff;
+}
+
 void setmotor(int fl, int fr, int bl, int br){
-	motor[mot2] = fl;
-	motor[mot3] = fr;
-	motor[mot4] = bl;
-	motor[mot5] = br;
+	mot(mot2, fl);
+	mot(mot3, fr);
+	mot(mot4, bl);
+	mot(mot5, br);
 }
 
 // Hackers be hackers
 void diffarmup(int coeff){
-	motor[motup] = (vexRT[Btn6U] ? H : Q) * coeff;
+	motor[motup] = (vexRT[Btn6U] ? Q : H) * coeff;
 }
 
 void setarmspin(int coeff){
-	motor[motspin] = (vexRT[Btn6U] ? M : Q) * coeff;
+	motor[motspin] = (vexRT[Btn6U] ? Q : M) * coeff;
 }
 
 // This code is self documenting
-#define forward setmotor(M, M, M, M)
-#define backward setmotor(-M, -M, -M, -M)
-#define left setmotor(-M, M, -M, M)
-#define right setmotor(M, -M, M, -M)
+#define forward setmotor(1, 1, 1, 1)
+#define backward setmotor(-1, -1, -1, -1)
+#define left setmotor(-1, 1, -1, 1)
+#define right setmotor(1, -1, 1, -1)
 #define nomotor setmotor(0, 0, 0, 0)
 
 // If you think this code sucks then I wish that all future
@@ -111,6 +117,12 @@ task autonomous()
 // I love you and you love me
 //
 // No
+int set_pos = -1;
+bool set_mode = false;
+
+// Threshold in which the robot will attempt to adjust precisely
+const int PRECISE_THRESHOLD = 10;
+
 task usercontrol()
 {
 	// User control code here, inside the loop
@@ -139,12 +151,36 @@ task usercontrol()
 
 		if(vexRT[Btn8U]){
 			diffarmup(1);
+			set_mode = false;
 		}
 		else if(vexRT[Btn8D]){
 			diffarmup(-1);
+			set_mode = false;
 		}
 		else{
-			diffarmup(0);
+			if(set_mode){
+				int diff = SensorValue[shaft1] - set_pos, adiff = abs(diff);
+				if(diff > 0){
+					motor[motup] = adiff > PRECISE_THRESHOLD ? -H : -Q;
+				}
+				else if(diff < 0){
+					motor[motup] = adiff > PRECISE_THRESHOLD ? H : Q;
+				}
+			}
+			else{
+				diffarmup(0);
+			}
+		}
+
+		// Arm Locks
+
+		// Set arm lock to position
+		if(vexRT[Btn5D]){
+			set_pos = SensorValue[shaft1];
+		}
+		// Apply arm lock
+		else if(vexRT[Btn6D]){
+			set_mode = true;
 		}
 
 		// Arm Spin Control
