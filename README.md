@@ -19,6 +19,6 @@ Copy plz
 ### In house games
 
 Game # | Fujitsu LifeBots
-- | -
+----------- | ----------------------
 1 | Win
 
