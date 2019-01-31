@@ -21,4 +21,4 @@ Copy plz
 Game # | Fujitsu LifeBots
 ----------- | ----------------------
 1 | Win
-
+2 | We don't talk about number 2
