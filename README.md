@@ -22,3 +22,4 @@ Game # | Fujitsu LifeBots
 ----------- | ----------------------
 1 | Win
 2 | We don't talk about number 2
+3 | Coop Mission - Everyone lost
